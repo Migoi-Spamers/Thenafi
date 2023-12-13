@@ -10,4 +10,4 @@ diffPercent = 100 - (liveThe.priceUsd / the.priceUsd) * 100;
 - make .env file.
 - copy .env_exampe content to .evn.
 - Fill in variables on .env file.
-- 
+- Run `npm run dev`
