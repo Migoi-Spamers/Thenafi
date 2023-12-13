@@ -13,8 +13,6 @@ const {
     SWAP_PERCENT,
 } = process.env;
 
-console.log(process.env);
-
 const TheAddress = '0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11';
 const liveTheAddress = '0xCdC3A010A3473c0C4b2cB03D8489D6BA387B83CD';
 
