@@ -58,7 +58,7 @@ function getTokenPrices() {
         }
         ).then((response) => {
             const [the, liveThe] = response.data.data.getTokenPrices;
-            const diffPercent = 100 - (liveThe.priceUsd / the.priceUsd) * 100;
+            const diffPercent = 100 - (the.priceUsd / liveThe.priceUsd) * 100;
 
             console.log(`
                 Date: ${Date()}
