@@ -65,8 +65,8 @@ function getTokenPrices() {
         }
         ).then((response) => {
             const [the, liveThe] = response.data.data.getTokenPrices;
-            // const diffPercent = 100 - (liveThe.priceUsd / the.priceUsd) * 100;
-            const diffPercent = Math.floor(Math.random() * 8);
+            const diffPercent = 100 - (liveThe.priceUsd / the.priceUsd) * 100;
+            // const diffPercent = Math.floor(Math.random() * 8);
 
             console.log(`
                 Date: ${Date()}
@@ -85,12 +85,14 @@ function getTokenPrices() {
                 if (diffPercent >= Number.parseFloat(SWAP_PERCENT)) {
                     swap(LIVETHE_NAME, resolve, reject, logData);
                 } else {
+                    console.log('dont bought');
                     resolve({bought: false});
                 }
             } else {
                 if (diffPercent < 2) {
                     swap(THE_NAME, resolve, reject, logData);
                 } else {
+                    console.log('dont bought');
                     resolve({bought: false});
                 }
             }
@@ -112,8 +114,6 @@ async function swap(swapTo, resolve, reject, logData) {
         amountIn = (Math.floor(amountIn * 100) / 100) * (10 ** 18);
 
         const amountOutMin = amountIn * 0.98;
-
-        console.log(amountIn, amountOutMin);
 
         const routes = [{
             from: swapTo === LIVETHE_NAME ? TheAddress : liveTheAddress,
@@ -156,7 +156,6 @@ async function callToGetPrice() {
     while (true) {
         try {
             const data = await getTokenPrices();
-            console.log(data);
             if (data.bought) {
                 fs.appendFile('./logData.txt', `
                     Date: ${Date()}
