@@ -65,7 +65,7 @@ function getTokenPrices() {
                 LiveTHE/THE: ${diffPercent}%
             `);
 
-            if (diffPercent >= SWAP_PERCENT) {
+            if (diffPercent >= Number.parseFloat(SWAP_PERCENT)) {
                 swapToLiveThe(resolve, reject);
             } else {
                 resolve({bought: false});
