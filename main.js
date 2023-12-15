@@ -12,7 +12,7 @@ const {
     SWAP_PERCENT,
 } = process.env;
 
-const TheAddress = '0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11';
+const theAddress = '0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11';
 const liveTheAddress = '0xCdC3A010A3473c0C4b2cB03D8489D6BA387B83CD';
 
 const theContractABI = require('./theABI.json');
@@ -30,7 +30,7 @@ const account = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
 web3.eth.accounts.wallet.add(account);
 web3.eth.defaultAccount = account.address;
 
-const theContract = new web3.eth.Contract(theContractABI, TheAddress);
+const theContract = new web3.eth.Contract(theContractABI, theAddress);
 const liveTheContract = new web3.eth.Contract(liveTheContractABI, liveTheAddress);
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -45,7 +45,7 @@ function getTokenPrices() {
                 {
                     getTokenPrices(
                       inputs: [
-                        { address: "${TheAddress}", networkId: 56 }
+                        { address: "${theAddress}", networkId: 56 }
                         { address: "${liveTheAddress}", networkId: 56 }
                       ]
                     ) {
@@ -100,16 +100,6 @@ function getTokenPrices() {
     });
 }
 
-async function approveInfiniteTokens(contract, spenderAddress, ownerAddress) {
-    const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
-
-    await contract.methods.approve(spenderAddress, MAX_UINT256).send({
-        from: ownerAddress,
-        gas: '70000', // Adjust gas limit as needed
-        gasPrice: web3.utils.toWei('3', 'gwei'),
-    });
-}
-
 async function swap(swapTo, resolve, reject, logData) {
     try {
         console.log(`Swapping to ${swapTo}`);
@@ -119,13 +109,24 @@ async function swap(swapTo, resolve, reject, logData) {
         const tokenContract = swapTo === LIVETHE_NAME ? theContract : liveTheContract;
         let amountIn = await tokenContract.methods.balanceOf(YOUR_ADDRESS).call();
         amountIn = Number.parseFloat(amountIn) / (10 ** 18);
-        amountIn = (Math.floor(amountIn * 100) / 100) * (10 ** 18);
+        amountIn = Math.floor(amountIn) * (10 ** 18);
 
-        const amountOutMin = amountIn * 0.98;
+        const amountOutMin = amountIn * 0.9;
+
+        await tokenContract.methods.approve(contractAddress, amountIn).send({
+            from: YOUR_ADDRESS,
+            gas: '70000', // Adjust gas limit as needed
+            gasPrice: web3.utils.toWei('3', 'gwei'),
+        });
+
+        console.log(`Approved token`);
+        console.log(amountIn, amountOutMin);
+
+        const [fromToken, toToken] = swapTo === LIVETHE_NAME ? [theAddress, liveTheAddress] : [liveTheAddress, theAddress];
 
         const routes = [{
-            from: swapTo === LIVETHE_NAME ? TheAddress : liveTheAddress,
-            to: swapTo === LIVETHE_NAME ? liveTheAddress : TheAddress,
+            from: fromToken,
+            to: toToken,
             stable: true
         }];
 
@@ -134,7 +135,7 @@ async function swap(swapTo, resolve, reject, logData) {
             .send({
                 from: YOUR_ADDRESS,
                 gas: '400000', // Adjust gas limit as needed
-                gasPrice: web3.utils.toWei('5', 'gwei'), // Set gas price
+                gasPrice: web3.utils.toWei('3', 'gwei'), // Set gas price
             })
             .then((result) => {
                 console.log('Swap successful! txs: ', result.transactionHash);
@@ -153,11 +154,6 @@ function sleep(ms) {
 }
 
 async function callToGetPrice() {
-    console.log('approve the for infinity spending');
-    await approveInfiniteTokens(theContract, TheAddress, YOUR_ADDRESS);
-    console.log('approve liveThe for infinity spending');
-    await approveInfiniteTokens(liveTheContract, liveTheAddress, YOUR_ADDRESS);
-
     while (true) {
         try {
             const data = await getTokenPrices();
@@ -175,7 +171,7 @@ async function callToGetPrice() {
                     console.log('Updated LogData!');
                 })
             }
-            await sleep(60000 * 5);
+            await sleep(1000);
         } catch (error) {
             console.error(error);
             break;
