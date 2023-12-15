@@ -9,8 +9,6 @@ const {
     IDEFINEKEY,
     YOUR_ADDRESS,
     PRIVATE_KEY,
-    AMOUNT_IN,
-    AMOUNT_OUT_MIN,
     SWAP_PERCENT,
 } = process.env;
 
@@ -102,6 +100,16 @@ function getTokenPrices() {
     });
 }
 
+async function approveInfiniteTokens(contract, spenderAddress, ownerAddress) {
+    const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+
+    await contract.methods.approve(spenderAddress, MAX_UINT256).send({
+        from: ownerAddress,
+        gas: '70000', // Adjust gas limit as needed
+        gasPrice: web3.utils.toWei('3', 'gwei'),
+    });
+}
+
 async function swap(swapTo, resolve, reject, logData) {
     try {
         console.log(`Swapping to ${swapTo}`);
@@ -120,14 +128,6 @@ async function swap(swapTo, resolve, reject, logData) {
             to: swapTo === LIVETHE_NAME ? liveTheAddress : TheAddress,
             stable: true
         }];
-
-        await tokenContract.methods.approve(contractAddress, amountIn).send({
-            from: YOUR_ADDRESS,
-            gas: '70000', // Adjust gas limit as needed
-            gasPrice: web3.utils.toWei('3', 'gwei'),
-        });
-
-        console.log(`Approved token`);
 
         const deadline = Math.floor(Date.now() / 1000) + 60 * 2;
         contract.methods.swapExactTokensForTokens(JSON.stringify(amountIn), JSON.stringify(amountOutMin), routes, YOUR_ADDRESS, deadline)
@@ -153,6 +153,11 @@ function sleep(ms) {
 }
 
 async function callToGetPrice() {
+    console.log('approve the for infinity spending');
+    await approveInfiniteTokens(theContract, TheAddress, YOUR_ADDRESS);
+    console.log('approve liveThe for infinity spending');
+    await approveInfiniteTokens(liveTheContract, liveTheAddress, YOUR_ADDRESS);
+
     while (true) {
         try {
             const data = await getTokenPrices();
