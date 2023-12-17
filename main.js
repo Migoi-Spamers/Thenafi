@@ -36,6 +36,7 @@ const liveTheContract = new web3.eth.Contract(liveTheContractABI, liveTheAddress
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 let swapsToLiveThe = true;
+let getPriceCount = 0;
 
 function getTokenPrices() {
     return new Promise((resolve, reject) => {
@@ -81,16 +82,28 @@ function getTokenPrices() {
 
             if (swapsToLiveThe) {
                 if (diffPercent >= Number.parseFloat(SWAP_PERCENT)) {
-                    swap(LIVETHE_NAME, resolve, reject, logData);
+                    if (getPriceCount === 1) {
+                        swap(LIVETHE_NAME, resolve, reject, logData);
+                    } else {
+                        console.log('can buy, wait for get price second');
+                        getPriceCount++;
+                        resolve({bought: false});
+                    }
                 } else {
-                    console.log('dont bought');
+                    console.log('dont buy');
                     resolve({bought: false});
                 }
             } else {
-                if (diffPercent < 2) {
-                    swap(THE_NAME, resolve, reject, logData);
+                if (diffPercent < 1) {
+                    if (getPriceCount === 1) {
+                        swap(THE_NAME, resolve, reject, logData);
+                    } else {
+                        console.log('can buy, wait for get price second');
+                        getPriceCount++;
+                        resolve({bought: false});
+                    }
                 } else {
-                    console.log('dont bought');
+                    console.log('dont buy');
                     resolve({bought: false});
                 }
             }
@@ -105,6 +118,7 @@ async function swap(swapTo, resolve, reject, logData) {
         console.log(`Swapping to ${swapTo}`);
 
         swapsToLiveThe = !swapsToLiveThe;
+        getPriceCount = 0;
 
         const tokenContract = swapTo === LIVETHE_NAME ? theContract : liveTheContract;
         let amountIn = await tokenContract.methods.balanceOf(YOUR_ADDRESS).call();
@@ -171,7 +185,7 @@ async function callToGetPrice() {
                     console.log('Updated LogData!');
                 })
             }
-            await sleep(60000 * 3);
+            await sleep(60000 * 1.5);
         } catch (error) {
             console.error(error);
             break;
