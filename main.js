@@ -74,39 +74,39 @@ function getTokenPrices() {
                 LiveTHE/THE: ${diffPercent}%
             `);
 
-            const logData = {
-                thePrice: the.priceUsd, 
-                livePrice: liveThe.priceUsd, 
-                percent: diffPercent
-            };
+            resolve({bought: false});
+            // const logData = {
+            //     thePrice: the.priceUsd, 
+            //     livePrice: liveThe.priceUsd, 
+            //     percent: diffPercent
+            // };
 
-            if (swapsToLiveThe) {
-                if (diffPercent >= Number.parseFloat(SWAP_PERCENT)) {
-                    if (getPriceCount === 1) {
-                        swap(LIVETHE_NAME, resolve, reject, logData);
-                    } else {
-                        console.log('can buy, wait for get price second');
-                        getPriceCount++;
-                        resolve({bought: false});
-                    }
-                } else {
-                    console.log('dont buy');
-                    resolve({bought: false});
-                }
-            } else {
-                if (diffPercent < 1) {
-                    if (getPriceCount === 1) {
-                        swap(THE_NAME, resolve, reject, logData);
-                    } else {
-                        console.log('can buy, wait for get price second');
-                        getPriceCount++;
-                        resolve({bought: false});
-                    }
-                } else {
-                    console.log('dont buy');
-                    resolve({bought: false});
-                }
-            }
+            // if (swapsToLiveThe) {
+            //     if (diffPercent >= Number.parseFloat(SWAP_PERCENT)) {
+            //         if (getPriceCount === 1) {
+            //             swap(LIVETHE_NAME, resolve, reject, logData);
+            //         } else {
+            //             console.log('can buy, wait for get price second');
+            //             getPriceCount++;
+            //             resolve({bought: false});
+            //         }
+            //     } else {
+            //         console.log('dont buy');
+            //     }
+            // } else {
+            //     if (diffPercent < 1) {
+            //         if (getPriceCount === 1) {
+            //             swap(THE_NAME, resolve, reject, logData);
+            //         } else {
+            //             console.log('can buy, wait for get price second');
+            //             getPriceCount++;
+            //             resolve({bought: false});
+            //         }
+            //     } else {
+            //         console.log('dont buy');
+            //         resolve({bought: false});
+            //     }
+            // }
         }).catch((error) => {
             reject(error);
         });
@@ -170,22 +170,8 @@ function sleep(ms) {
 async function callToGetPrice() {
     while (true) {
         try {
-            const data = await getTokenPrices();
-            if (data.bought) {
-                fs.appendFile('./logData.txt', `
-                    Date: ${Date()}
-                    THE: $${data.logData.thePrice}
-                    LiveTHE: $${data.logData.livePrice}
-                    LiveTHE/THE: ${data.logData.percent}%
-                    SwapTo: ${data.logData.swapTo}
-                    txs: https://bscscan.com/tx/${data.logData.txsHash}
-                    ---------------------------
-                `, function (err) {
-                    if (err) throw err;
-                    console.log('Updated LogData!');
-                })
-            }
-            await sleep(60000 * 1.5);
+            await getTokenPrices();
+            await sleep(60000);
         } catch (error) {
             console.error(error);
             break;
