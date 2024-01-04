@@ -10,6 +10,7 @@ const {
     YOUR_ADDRESS,
     PRIVATE_KEY,
     SWAP_PERCENT,
+    HOLDING_THE
 } = process.env;
 
 const theAddress = '0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11';
@@ -35,7 +36,7 @@ const liveTheContract = new web3.eth.Contract(liveTheContractABI, liveTheAddress
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-let swapsToLiveThe = false;
+let swapsToLiveThe = !!HOLDING_THE;
 
 function getTokenPrices() {
     return new Promise((resolve, reject) => {
