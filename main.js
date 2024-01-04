@@ -35,7 +35,7 @@ const liveTheContract = new web3.eth.Contract(liveTheContractABI, liveTheAddress
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-let swapsToLiveThe = true;
+let swapsToLiveThe = false;
 
 function getTokenPrices() {
     return new Promise((resolve, reject) => {
@@ -52,14 +52,14 @@ function getTokenPrices() {
             };
 
             if (swapsToLiveThe) {
-                if (priceNative >= 0.98) {
+                if (priceNative <= 0.94) {
                     swap(LIVETHE_NAME, resolve, reject, logData);
                 } else {
                     console.log('dont buy');
                     resolve({bought: false});
                 }
             } else {
-                if (priceNative <= 0.94) {
+                if (priceNative >= 0.98) {
                     swap(THE_NAME, resolve, reject, logData);
                 } else {
                     console.log('dont buy');
@@ -88,7 +88,7 @@ async function swap(swapTo, resolve, reject, logData) {
         await tokenContract.methods.approve(contractAddress, amountIn).send({
             from: YOUR_ADDRESS,
             gas: '70000', // Adjust gas limit as needed
-            gasPrice: web3.utils.toWei('1', 'gwei'),
+            gasPrice: web3.utils.toWei('3', 'gwei'),
         });
 
         console.log(`Approved token`);
@@ -107,7 +107,7 @@ async function swap(swapTo, resolve, reject, logData) {
             .send({
                 from: YOUR_ADDRESS,
                 gas: '400000', // Adjust gas limit as needed
-                gasPrice: web3.utils.toWei('1', 'gwei'), // Set gas price
+                gasPrice: web3.utils.toWei('3', 'gwei'), // Set gas price
             })
             .then((result) => {
                 console.log('Swap successful! txs: ', result.transactionHash);
