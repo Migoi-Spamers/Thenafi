@@ -16,7 +16,7 @@ YOUR_ADDRESS =
 PRIVATE_KEY = 
 
 # I want to know what your address is holding livethe or the to swapping.
-# If your wallet is holding `the`` should be `true` value or holding `livethe` should be `false` value.
+# If your wallet is holding `the` should be `true` value or holding `livethe` should be `false` value.
 HOLDING_THE =
 
 ```
