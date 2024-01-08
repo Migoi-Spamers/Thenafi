@@ -26,4 +26,5 @@ HOLDING_THE =
 - make .env file.
 - copy .env_exampe content to .evn.
 - Fill in variables on .env file.
+- Run `npm install`
 - Run `npm run dev`
