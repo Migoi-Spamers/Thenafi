@@ -6,11 +6,11 @@ const {Web3} = require('web3');
 
 const {
     BSC_RPC,
-    IDEFINEKEY,
     YOUR_ADDRESS,
     PRIVATE_KEY,
-    SWAP_PERCENT,
-    HOLDING_THE
+    HOLDING_THE,
+    SWAPPING_THE_TO_LIVETHE_RATE,
+    SWAPPING_LIVETHE_TO_THE_RATE
 } = process.env;
 
 const theAddress = '0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11';
@@ -53,14 +53,14 @@ function getTokenPrices() {
             };
 
             if (swapsToLiveThe) {
-                if (priceNative <= 0.94) {
+                if (priceNative <= Number.parseFloat(SWAPPING_THE_TO_LIVETHE_RATE)) {
                     swap(LIVETHE_NAME, resolve, reject, logData);
                 } else {
                     console.log('dont buy');
                     resolve({bought: false});
                 }
             } else {
-                if (priceNative >= 0.98) {
+                if (priceNative >= Number.parseFloat(SWAPPING_LIVETHE_TO_THE_RATE)) {
                     swap(THE_NAME, resolve, reject, logData);
                 } else {
                     console.log('dont buy');
