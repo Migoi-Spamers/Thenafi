@@ -1,6 +1,7 @@
 # Thenafi
 Swap THE token to liveTHE token when different price and reverse.
-Everytime 1.5m app will be tracking the price of The and The. If the percent of prices >= your expected percent when dapp will be swap The to liveThe
+Everytime 1.5m app will be tracking the price of The and liveThe.
+Price get from https://api.dexscreener.com/latest/dex/pairs/bsc/0x3765476BfFE43Cf4c0656bF3A7529c54ae247056
 
 # env tutorial
 ```
