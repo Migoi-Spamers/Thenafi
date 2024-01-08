@@ -1,5 +1,5 @@
 # Thenafi
-Swap THE token to liveTHE token when different price
+Swap THE token to liveTHE token when different price and reverse.
 Everytime 1.5m app will be tracking the price of The and The. If the percent of prices >= your expected percent when dapp will be swap The to liveThe
 
 # env tutorial
