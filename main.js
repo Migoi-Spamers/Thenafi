@@ -36,7 +36,7 @@ const liveTheContract = new web3.eth.Contract(liveTheContractABI, liveTheAddress
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-let swapsToLiveThe = !!HOLDING_THE;
+let swapsToLiveThe = HOLDING_THE === 'true';
 
 function getTokenPrices() {
     return new Promise((resolve, reject) => {
