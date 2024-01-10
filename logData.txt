@@ -1,0 +1,13 @@
+
+                    Date: Wed Jan 10 2024 19:10:58 GMT+0700 (Indochina Time)
+                    priceNative: $0.9803
+                    SwapTo: THE
+                    txs: https://bscscan.com/tx/0x0521395ef9b47265500693f4ea73fb0b79d164140e0bf668af6299697c264c91
+                    ---------------------------
+                
+                    Date: Wed Jan 10 2024 19:15:42 GMT+0700 (Indochina Time)
+                    priceNative: $0.9803
+                    SwapTo: THE
+                    txs: https://bscscan.com/tx/0xd5d92ea3edfce39c0e06916afa431aa671a75d0b3880f504cfca902739289dbc
+                    ---------------------------
+                

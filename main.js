@@ -86,6 +86,9 @@ async function swap(swapTo, resolve, reject, logData) {
 
         const amountOutMin = amountIn * 0.9;
 
+        const amountInBI = web3.utils.toBigInt(amountIn);
+        const amountOutMinBI = web3.utils.toBigInt(amountOutMin);
+
         await tokenContract.methods.approve(contractAddress, amountIn).send({
             from: YOUR_ADDRESS,
             gas: '70000', // Adjust gas limit as needed
@@ -93,7 +96,7 @@ async function swap(swapTo, resolve, reject, logData) {
         });
 
         console.log(`Approved token`);
-        console.log(amountIn, amountOutMin);
+        console.log(amountInBI, amountOutMinBI);
 
         const [fromToken, toToken] = swapTo === LIVETHE_NAME ? [theAddress, liveTheAddress] : [liveTheAddress, theAddress];
 
@@ -104,7 +107,7 @@ async function swap(swapTo, resolve, reject, logData) {
         }];
 
         const deadline = Math.floor(Date.now() / 1000) + 60 * 2;
-        contract.methods.swapExactTokensForTokens(JSON.stringify(amountIn), JSON.stringify(amountOutMin), routes, YOUR_ADDRESS, deadline)
+        contract.methods.swapExactTokensForTokens(amountInBI, amountOutMinBI, routes, YOUR_ADDRESS, deadline)
             .send({
                 from: YOUR_ADDRESS,
                 gas: '400000', // Adjust gas limit as needed
