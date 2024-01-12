@@ -146,7 +146,7 @@ async function callToGetPrice() {
                     console.log('Updated LogData!');
                 })
             }
-            await sleep(60000 * 2);
+            await sleep(60000 * 1.5);
         } catch (error) {
             console.error(error);
             break;
